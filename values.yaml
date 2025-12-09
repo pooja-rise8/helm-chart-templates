@@ -1,0 +1,25 @@
+name: frontend
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  # Image pull secrets for private registries
+  # pullSecrets:
+  #   - name: my-registry-secret
+
+containerPort: 80
+
+service:
+  type: ClusterIP
+  port: 80
+
+# OpenShift Route configuration
+route:
+  enabled: true
+  host: ""  # Leave empty to auto-generate, or specify your route host
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
