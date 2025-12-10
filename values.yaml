@@ -3,13 +3,15 @@ name: frontend
 replicaCount: 1
 
 image:
-  repository: nginxinc/nginx-unprivileged
-  tag: stable-alpine
-  pullPolicy: IfNotPresent
+  # For locally built images pushed to OpenShift internal registry
+  repository: image-registry.openshift-image-registry.svc:5000/<namespace>/<image-name>
+  tag: latest
+  pullPolicy: Always
   # Image pull secrets for private registries
   # pullSecrets:
   #   - name: my-registry-secret
 
+# Ensure this matches the port your application container listens on
 containerPort: 8080
 
 service:
