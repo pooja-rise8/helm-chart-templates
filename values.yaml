@@ -3,18 +3,18 @@ name: frontend
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: "latest"
+  repository: nginxinc/nginx-unprivileged
+  tag: stable-alpine
   pullPolicy: IfNotPresent
   # Image pull secrets for private registries
   # pullSecrets:
   #   - name: my-registry-secret
 
-containerPort: 80
+containerPort: 8080
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 # OpenShift Route configuration
 route:
