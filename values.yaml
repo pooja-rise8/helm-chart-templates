@@ -4,7 +4,7 @@ replicaCount: 1
 
 image:
   # For locally built images pushed to OpenShift internal registry
-  repository: image-registry.openshift-image-registry.svc:5000/<namespace>/<image-name>
+  repository: image-registry.openshift-image-registry.svc:5000/nova/nova-frontend
   tag: latest
   pullPolicy: Always
   # Image pull secrets for private registries
@@ -12,16 +12,16 @@ image:
   #   - name: my-registry-secret
 
 # Ensure this matches the port your application container listens on
-containerPort: 8080
+containerPort: 3000
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 3000
 
 # OpenShift Route configuration
 route:
   enabled: true
-  host: ""  # Leave empty to auto-generate, or specify your route host
+  host: "" # Leave empty to auto-generate, or specify your route host
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
