@@ -13,6 +13,9 @@ spec:
     metadata:
       labels:
         {{- include "frontend-chart-template.selectorLabels" . | nindent 8 }}
+      annotations:
+        # during helm upgrade, pods restart automatically when values change
+        checksum/values: {{ toJson .Values | sha256sum }}
     spec:
       {{- with .Values.image.pullSecrets }}
       imagePullSecrets:
