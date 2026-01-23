@@ -25,3 +25,18 @@ route:
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
+
+env:
+  DEV_MODE: "false"
+  PUBLISH_ENABLED: "true"
+  UPLOAD_ENABLED: "true"
+  MAX_ACTIVE_FEEDS: "5"
+  LEADER_ENABLED: "true"
+  TRACKS_ENABLED: "true"
+  ARCHIVE_POLL_PER_FRAME_TIMEOUT_SECS: "10"
+  SEARCH_RADIUS_DEFAULT: "800"
+  PLAYBACK_SPEED_DEFAULT: "15"
+  # Unclassified
+  CLASSIFICATION_COLOR: "#007a33"
+  CLASSIFICATION_TEXT_COLOR: "white"
+  CLASSIFICATION_TEXT: "UNCLASSIFIED"
