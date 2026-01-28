@@ -96,7 +96,7 @@ OC_TOKEN=$(oc whoami -t)
 podman login -u $(oc whoami) -p $OC_TOKEN default-route-openshift-image-registry.apps-crc.testing
 ```
 
-You may have to include --tls-verify=false
+You may have to include `--tls-verify=false`
 
 ### Step 3: Tag Image for OpenShift Registry
 
