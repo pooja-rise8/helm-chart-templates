@@ -21,7 +21,11 @@ service:
 # OpenShift Route configuration
 route:
   enabled: true
-  host: ""  # Leave empty to auto-generate, or specify your route host
+  host: "" # Leave empty to auto-generate, or specify your route host
   tls:
     termination: edge
     insecureEdgeTerminationPolicy: Redirect
+
+env:
+  # example env variable
+  DEV_MODE: "false"

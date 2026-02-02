@@ -13,22 +13,30 @@ A minimal Helm chart template for deploying a locally built container image on O
 ### Setup
 
 1. Stop & Clean Existing Cluster (if needed)
-  - crc stop - Stop any running OpenShift Local instance
-  - crc cleanup - Clean up resources
+
+- crc stop - Stop any running OpenShift Local instance
+- crc cleanup - Clean up resources
+
 2. Initialize Cluster
-  - crc setup - Configure networking and hypervisor
-  - crc start -p "$PULL_SECRET_PATH" - Start cluster with pull secret
+
+- crc setup - Configure networking and hypervisor
+- crc start -p "$PULL_SECRET_PATH" - Start cluster with pull secret
+
 3. Login & Configure Environment
-  - eval $(crc oc-env) - Set environment variables for oc CLI
-  - oc login -u kubeadmin https://api.crc.testing:6443 - Login as admin
+
+- eval $(crc oc-env) - Set environment variables for oc CLI
+- oc login -u kubeadmin https://api.crc.testing:6443 - Login as admin
+
 4. Create Project & Configure Registry
-  - oc new-project "$TARGET_NAMESPACE" - Create a namespace for your app
+
+- oc new-project "$TARGET_NAMESPACE" - Create a namespace for your app
 
 ---
 
 ### Overview
 
 The workflow involves:
+
 1. Building your container image locally using Podman
 2. Pushing the image to OpenShift's internal registry
 3. Deploying the image using this Helm chart
@@ -42,12 +50,14 @@ The workflow involves:
 ### OpenShift Internal Registry
 
 OpenShift Local includes a built-in container registry that's automatically exposed:
+
 - **External URL** (for pushing): `default-route-openshift-image-registry.apps-crc.testing`
 - **Internal URL** (for pulling): `image-registry.openshift-image-registry.svc:5000`
 
 The registry uses your OpenShift authentication token, so no separate credentials are needed.
 
 To verify the registry is accessible:
+
 ```bash
 # Check if registry route exists
 oc get route -n openshift-image-registry
@@ -62,10 +72,16 @@ In your application repository (containing the Dockerfile):
 
 ```bash
 cd /path/to/your/app
+
+# Log into private Docker/Podman registry (stores creds in podman machine)
+# this step is OPTIONAL - only if your build references a private registry
+podman login <YOUR_REGISTRY_SERVER_DOMAIN> -u '<YOUR_LOGIN_USERNAME>'
+
 podman build -t <image-name>:<tag> .
 ```
 
 Alternatively, just pull this public image to verify this internal registry setup
+
 ```bash
 podman pull nginxinc/nginx-unprivileged:stable-alpine
 ```
@@ -79,7 +95,8 @@ OC_TOKEN=$(oc whoami -t)
 # Log in to the registry
 podman login -u $(oc whoami) -p $OC_TOKEN default-route-openshift-image-registry.apps-crc.testing
 ```
-You may have to include --tls-verify=false
+
+You may have to include `--tls-verify=false`
 
 ### Step 3: Tag Image for OpenShift Registry
 
@@ -92,21 +109,30 @@ podman tag <image-name>:<tag> default-route-openshift-image-registry.apps-crc.te
 ```bash
 podman push default-route-openshift-image-registry.apps-crc.testing/<namespace>/<image-name>:<tag>
 ```
-You may have to include --tls-verify=false
+
+You may have to include `--tls-verify=false`
+
+If you run into errors running `podman push`, try the following [workaround](docs/podman-push-workaround.md).
 
 ### Step 5: Deploy with Helm
 
 Basic Installation
+
 1. Navigate to the chart directory
 2. Install the chart with default values:
+
 ```bash
 helm install <image-name> . -f values.yaml -n <namespace>
 ```
+
 Upgrading
+
 ```bash
 helm upgrade <image-name> . -f your-values.yaml -n <namespace>
 ```
+
 Uninstalling
+
 ```bash
 helm uninstall <image-name> -n <namespace>
 ```
@@ -132,7 +158,7 @@ Ensure the `containerPort` in your values file matches the port your application
 
 ```yaml
 # values.yaml
-containerPort: 8080  # Change to match your app (e.g., 3000 for React dev server)
+containerPort: 8080 # Change to match your app (e.g., 3000 for React dev server)
 ```
 
 ---
